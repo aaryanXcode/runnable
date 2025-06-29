@@ -286,6 +286,63 @@ Available Commands:
 ```
 
 
+# Runnable Repository - Code Flow Architecture
+
+## 1. Entry Point
+### `src/main/java/com/runnable/agent/AgentApplication.java`
+- **Function:** Main class, Spring Boot application entry point. Launches the app.
+
+## 2. Configuration
+### `src/main/java/com/runnable/agent/configuration/DockerClientConfiguration.java`
+- **Function:** Configures and provides a DockerClient bean for Docker operations.
+
+## 3. Data Layer
+### `src/main/java/com/runnable/agent/dto/Jobs.java`
+- **Function:** Entity representing a job in the system; maps to the `jobs` table in the database.
+
+### `src/main/java/com/runnable/agent/dto/ContainerInfo.java`
+- **Function:** Record to hold container metadata (id, name, status, port, VNC URL).
+
+### `src/main/java/com/runnable/agent/repository/JobsRepository.java`
+- **Function:** Spring Data JPA repository for Jobs entity. Supports custom queries.
+
+## 4. Service Layer
+### `src/main/java/com/runnable/agent/service/JobService.java`
+- **Function:** Core business logic for managing jobs, containers, and images. Offers methods such as:
+  - `getAllJobs()`
+  - `createJob()`
+  - `getAllContainers()`
+  - `stopJobById()`, `startJobById()`
+
+### `src/main/java/com/runnable/agent/service/DockerClientService.java`
+- **Function:** Handles Docker operations (list containers/images, create/start/stop containers, port management).
+
+### `src/main/java/com/runnable/agent/service/TerminalRunner.java`
+- **Function:** Implements a terminal interface for interactive command-line job management. Registers commands for running, creating, stopping, listing jobs/containers/images, and provides help/exit commands.
+
+## 5. Controller Layer
+### `src/main/java/com/runnable/agent/controller/Jobcontroller.java`
+- **Function:** REST Controller exposing `/jobs` endpoint to list scheduled jobs (demo/sample data).
+
+## 6. Command Handling
+### `src/main/java/com/runnable/agent/commandhandler/CommandHandler.java`
+- **Function:** Functional interface for handling CLI commands.
+
+---
+
+## Flow Summary
+
+1. **Startup**: `AgentApplication` (Spring Boot) starts.
+2. **Docker Setup**: `DockerClientConfiguration` provides DockerClient.
+3. **Terminal Interaction**: `TerminalRunner` registers CLI commands for job/container management, using `JobService` for business logic.
+4. **Job Management**: `JobService` orchestrates job creation and container operations through `DockerClientService` and persists state with `JobsRepository`.
+5. **REST API**: `Jobcontroller` exposes job data via HTTP.
+6. **Data Representation**: `Jobs` (entity) and `ContainerInfo` (record) represent core data objects.
+
+---
+
+> **Note:** This is based on the first 10 search results. There may be more files/functions in the repo.  
+> [See more files on GitHub](https://github.com/aaryanXcode/runnable/search?q=)
 
 
 
