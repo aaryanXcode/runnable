@@ -268,6 +268,23 @@ Components Involved:
     🐳 Agent-Docker integration still being optimized
 
   ![Screenshot from 2025-06-29 16-58-23](https://github.com/user-attachments/assets/a08e0127-7bf7-451b-b89b-5412ad87171f)
+```
+ > help
+
+Available Commands:
+────────────────────────────────────────────────────
+  create-job <name>     ▶ create a job by name[prompt]
+  run-job <name>        ▶ Run a job by name
+  stop-job <id>         ▶ Stop a job by its ID
+  stop-all              ▶ Stop all running jobs   [⏳ pending]
+  list-jobs             ▶ List all available jobs
+  list-containers       ▶ Show currently running containers
+  list-images           ▶ Display all available Docker images
+  help                  ▶ Show this help message
+  exit                  ▶ Exit the terminal interface
+────────────────────────────────────────────────────
+```
+
 
 
 
