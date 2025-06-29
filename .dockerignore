@@ -1,0 +1,36 @@
+# Version control
+.git
+.gitignore
+
+# Dependencies (will be installed in container)
+node_modules
+npm-debug.log
+
+# Build artifacts
+dist
+build
+
+# Documentation
+README.md
+*.md
+
+# IDE files
+.vscode
+.idea
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files (unless needed)
+.env.local
+.env.development
+
+# Test files
+tests/
+**/*test*
+
+# Docker files
+Dockerfile
+.dockerignore
+docker-compose.yml

@@ -1,0 +1,66 @@
+docker run -d -p 6080:6080 -v $(pwd)/output:/output coding-agent:latest "Build a Python app"
+docker build -t coding-agent:latest .
+//////
+#!/bin/bash
+export DISPLAY=:0
+
+# Start virtual screen
+Xvfb :0 -screen 0 1920x1080x24 &
+
+# Start window manager
+fluxbox &
+
+# Start VNC
+x11vnc -display :0 -forever -nopw -shared -rfbport 5900 &
+
+# Start noVNC
+/opt/novnc/utils/novnc_proxy --vnc localhost:5900 --listen 6080 &
+xdg-open http://localhost:6080/vnc_lite.html
+
+# Wait a bit for display
+sleep 2
+
+# Start agent
+python3 /agent.py "$1"
+
+# Keep container alive
+tail -f /dev/null
+//////
+
+# agent.py
+import os
+import time
+import sys
+import subprocess
+
+# Read input task
+task = sys.argv[1] if len(sys.argv) > 1 else "Build a Hello World app"
+print(f"[Agent] Received task: {task}")
+
+# Create output dir and define output file path
+os.makedirs("/output", exist_ok=True)
+code_path = "/output/app.py"   # ✅ THIS LINE WAS MISSING EARLIER
+
+# Write a simple Python script as output
+with open(code_path, "w") as f:
+    f.write("print('Hello from the AI-generated app!')\n")
+
+# Display the file
+print(f"[Agent] Opening GUI editor to display: {code_path}")
+
+subprocess.Popen(["xclock"])
+try:
+    subprocess.Popen(["gedit", code_path])
+except Exception as e:
+    print(f"Failed to launch mousepad: {e}")
+    
+subprocess.Popen(["xterm"])
+subprocess.Popen(["pcmanfm", "/output"])
+
+# Keep the container running so VNC doesn't close
+time.sleep(3600)
+
+
+docker compose run --rm app
+docker-compose down
+docker-compose --env-file .env up --build
